@@ -1,0 +1,21 @@
+name: turbulent-network/fail2ban
+debug: true
+description: "Parse fail2ban logs"
+  #filter: "evt.Parsed.program == 'fail2ban'"
+filter: 1 == 1
+onsuccess: next_stage
+grok:
+  pattern: '%{DATESTAMP:timestamp},%{NUMBER} %{WORD:program}\.actions%{SPACE}\[%{NUMBER}\]:%{SPACE}NOTICE%{SPACE}\[%{DATA:target_service}\] Ban %{IPORHOST:source_ip}'
+  apply_on: message
+  statics:
+    - target: evt.StrTime
+      expression: evt.Parsed.event_timestamp
+    - meta: target_service
+      expression: "evt.Parsed.target_service"
+    - meta: source_ip
+      expression: "evt.Parsed.source_ip"
+    - meta: log_type
+      value: fail2ban
+statics:
+  - meta: service
+    value: fail2ban

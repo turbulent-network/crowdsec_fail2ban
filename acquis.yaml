@@ -1,0 +1,6 @@
+---
+filenames:
+ - /var/log/fail2ban.log
+labels:
+  type: fail2ban
+---
